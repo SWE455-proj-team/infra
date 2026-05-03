@@ -32,7 +32,13 @@ variable "jwt_secret" {
 variable "github_repo_patterns" {
   description = "Allowed GitHub OIDC subject patterns for CI/CD roles"
   type        = list(string)
-  default     = ["repo:Jsploitt/SpringCloudLibraryPreAuthorized:*"]
+  default     = [
+    "repo:SWE455-proj-team/api-gateway:*",
+    "repo:SWE455-proj-team/book-service:*",
+    "repo:SWE455-proj-team/user-service:*",
+    "repo:SWE455-proj-team/eureka-server:*",
+    "repo:SWE455-proj-team/infra:*"
+    ]
 }
 
 # ── Networking ────────────────────────────────────────────────────────────────
