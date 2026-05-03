@@ -31,11 +31,11 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform init
-        working-directory: infra
+        working-directory: .
         run: terraform init
 
       - name: Terraform apply
-        working-directory: infra
+        working-directory: .
         env:
           TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
         run: terraform apply -auto-approve
