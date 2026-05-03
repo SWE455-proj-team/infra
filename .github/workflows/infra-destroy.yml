@@ -1,0 +1,55 @@
+name: Terraform Destroy (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      working_directory:
+        description: Terraform working directory
+        required: false
+        default: infra
+        type: string
+      confirm_destroy:
+        description: Type DESTROY to confirm
+        required: true
+        default: ""
+        type: string
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Confirm destroy
+        run: |
+          if [ "${{ inputs.confirm_destroy }}" != "DESTROY" ]; then
+            echo "confirm_destroy must be DESTROY"
+            exit 1
+          fi
+
+      - name: Terraform init
+        working-directory: ${{ inputs.working_directory }}
+        run: terraform init
+
+      - name: Terraform destroy
+        working-directory: ${{ inputs.working_directory }}
+        env:
+          TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
+        run: terraform destroy -auto-approve
