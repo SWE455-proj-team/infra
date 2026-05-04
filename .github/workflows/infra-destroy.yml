@@ -6,7 +6,7 @@ on:
       working_directory:
         description: Terraform working directory
         required: false
-        default: infra
+        default: "."
         type: string
       confirm_destroy:
         description: Type DESTROY to confirm
